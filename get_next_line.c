@@ -3,10 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>//TODO
 
-/*
- * Polish linked list for next call
-*/
-void	polish_list(t_list **list)
+
+void	save_list(t_list **list)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -21,19 +19,17 @@ void	polish_list(t_list **list)
 	last_node = find_last_node(*list);
 	i = 0;
 	k = 0;
-	while (last_node->str_buf[i] && last_node->str_buf[i] != '\n')
+	while (last_node->val[i] && last_node->val[i] != '\n')
 		++i;
-	while (last_node->str_buf[i] && last_node->str_buf[++i])
-		buf[k++] = last_node->str_buf[i];
+	while (last_node->val[i] && last_node->val[++i])
+		buf[k++] = last_node->val[i];
 	buf[k] = '\0';
-	clean_node->str_buf = buf;
+	clean_node->val = buf;
 	clean_node->next = NULL;
 	dealloc(list, clean_node, buf);
 }
 
-/*
- * Get my (line\n] 
-*/
+
 char	*get_line(t_list *list)
 {
 	int		str_len;
@@ -49,10 +45,7 @@ char	*get_line(t_list *list)
 	return (next_str);
 }
 
-/*
- * append one node
- * to the end of list
-*/
+
 void	append(t_list **list, char *buf)
 {
 	t_list	*new_node;
@@ -66,13 +59,13 @@ void	append(t_list **list, char *buf)
 		*list = new_node;
 	else
 		last_node->next = new_node;
-	new_node->str_buf = buf;
+	new_node->val = buf;
 	new_node->next = NULL;
 }
 
 void	create_list(t_list **list, int fd)
 {
-	int		char_read;	
+	int		bytes_read;	
 	char	*buf;
 
 	while (!found_newline(*list))
@@ -80,22 +73,17 @@ void	create_list(t_list **list, int fd)
 		buf = malloc(BUFFER_SIZE + 1);
 		if (NULL == buf)
 			return ;
-		char_read = read(fd, buf, BUFFER_SIZE);
-		if (!char_read)
+		bytes_read = read(fd, buf, BUFFER_SIZE);
+		if (!bytes_read)
 		{
 			free(buf);
 			return ;
 		}
-		buf[char_read] = '\0';
+		buf[bytes_read] = '\0';
 		append(list, buf);
 	}
 }
 
-/*
- * Mother function
- * 	~Took a fildes
- * 	~Gives back the next_string 
-*/
 char	*get_next_line(int fd)
 {
 	static t_list	*list = NULL;
@@ -107,6 +95,6 @@ char	*get_next_line(int fd)
 	if (list == NULL)
 		return (NULL);
 	next_line = get_line(list);
-	polish_list(&list);
+	save_list(&list);
 	return (next_line);
 }

@@ -11,9 +11,9 @@ int	found_newline(t_list *list)
 	while (list)
 	{
 		i = 0;
-		while (list->str_buf[i] && i < BUFFER_SIZE)
+		while (list->val[i] && i < BUFFER_SIZE)
 		{
-			if (list->str_buf[i] == '\n')
+			if (list->val[i] == '\n')
 				return (1);
 			++i;
 		}
@@ -31,9 +31,6 @@ t_list	*find_last_node(t_list *list)
 	return (list);
 }
 
-/*
- * Copy (string\n]
-*/
 void	copy_str(t_list *list, char *str)
 {
 	int	i;
@@ -45,25 +42,21 @@ void	copy_str(t_list *list, char *str)
 	while (list)
 	{
 		i = 0;
-		while (list->str_buf[i])
+		while (list->val[i])
 		{
-			if (list->str_buf[i] == '\n')
+			if (list->val[i] == '\n')
 			{
 				str[k++] = '\n';
 				str[k] = '\0';
 				return ;
 			}
-			str[k++] = list->str_buf[i++];
+			str[k++] = list->val[i++];
 		}
 		list = list->next;
 	}
 	str[k] = '\0';
 }
 
-/*
- * find the len to new line in
- * my linked list
-*/
 int	len_to_newline(t_list *list)
 {
 	int	i;
@@ -75,9 +68,9 @@ int	len_to_newline(t_list *list)
 	while (list)
 	{
 		i = 0;
-		while (list->str_buf[i])
+		while (list->val[i])
 		{
-			if (list->str_buf[i] == '\n')
+			if (list->val[i] == '\n')
 			{
 				++len;
 				return (len);
@@ -90,10 +83,6 @@ int	len_to_newline(t_list *list)
 	return (len);
 }
 
-/*
- * dealloc all from head
- * set heat->NULL
-*/
 void	dealloc(t_list **list, t_list *clean_node, char *buf)
 {
 	t_list	*tmp;
@@ -103,12 +92,12 @@ void	dealloc(t_list **list, t_list *clean_node, char *buf)
 	while (*list)
 	{
 		tmp = (*list)->next;
-		free((*list)->str_buf);
+		free((*list)->val);
 		free(*list);
 		*list = tmp;
 	}
 	*list = NULL;
-	if (clean_node->str_buf[0])
+	if (clean_node->val[0])
 		*list = clean_node;
 	else
 	{

@@ -3,10 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>//TODO
 
-/*
- * Polish linked list for next call
-*/
-void	polish_list(t_list **list)
+
+void	save_list(t_list **list)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -21,19 +19,16 @@ void	polish_list(t_list **list)
 	last_node = find_last_node(*list);
 	i = 0;
 	k = 0;
-	while (last_node->str_buf[i] && last_node->str_buf[i] != '\n')
+	while (last_node->val[i] && last_node->val[i] != '\n')
 		++i;
-	while (last_node->str_buf[i] && last_node->str_buf[++i])
-		buf[k++] = last_node->str_buf[i];
+	while (last_node->val[i] && last_node->val[++i])
+		buf[k++] = last_node->val[i];
 	buf[k] = '\0';
-	clean_node->str_buf = buf;
+	clean_node->val = buf;
 	clean_node->next = NULL;
 	dealloc(list, clean_node, buf);
 }
 
-/*
- * Get my (line\n]
-*/
 char	*get_line(t_list *list)
 {
 	int		str_len;
@@ -49,10 +44,6 @@ char	*get_line(t_list *list)
 	return (next_str);
 }
 
-/*
- * append one node
- * to the end of list
-*/
 void	append(t_list **list, char *buf, int fd)
 {
 	t_list	*new_node;
@@ -66,7 +57,7 @@ void	append(t_list **list, char *buf, int fd)
 		list[fd] = new_node;
 	else
 		last_node->next = new_node;
-	new_node->str_buf = buf;
+	new_node->val = buf;
 	new_node->next = NULL;
 }
 
@@ -102,6 +93,6 @@ char	*get_next_line(int fd)
 	if (list[fd] == NULL)
 		return (NULL);
 	next_line = get_line(list[fd]);
-	polish_list(&list[fd]);
+	save_list(&list[fd]);
 	return (next_line);
 }
