@@ -1,7 +1,6 @@
 
 #include "get_next_line_bonus.h"
 #include <stdlib.h>
-#include <stdio.h>//TODO
 
 
 void	save_list(t_list **list)
